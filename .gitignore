@@ -1,0 +1,39 @@
+# Node modules
+*/node_modules/
+
+# Build output
+dist/
+build/
+
+# Local environment files
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# IDE files
+.vscode/
+.idea/
+
+# Dependency directories
+backend/node_modules/
+frontend/node_modules/
+
+# Vite cache
+frontend/.vite/
+
+# NestJS artifacts
+backend/dist/
+
+# Chroma DB local storage
+backend/db/

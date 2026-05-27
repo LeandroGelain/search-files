@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem;
+}
+
+h1 {
+  margin-bottom: 1rem;
+}
+
+pre {
+  background: #111827;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
