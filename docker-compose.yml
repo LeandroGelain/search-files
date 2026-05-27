@@ -9,8 +9,10 @@ services:
       - /usr/src/app/node_modules
     environment:
       - NODE_ENV=development
-      - CHROMA_DB_PATH=/usr/src/app/db/chroma
+      - CHROMA_HOST=api.trychroma.com
     command: npm run start:dev
+    networks:
+      - app-network
 
   frontend:
     build:
@@ -23,3 +25,9 @@ services:
     environment:
       - NODE_ENV=development
     command: npm run dev -- --host 0.0.0.0
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

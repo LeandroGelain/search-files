@@ -1,32 +1,45 @@
-import { Injectable } from '@nestjs/common';
-import { ChromaClient } from 'chromadb';
-import { OpenAI } from 'langchain/llms/openai';
+﻿import { Injectable } from '@nestjs/common';
+import { ChromaClient, CloudClient } from 'chromadb';
+import { Anthropic } from '@anthropic-ai/sdk';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class AppService {
-  private readonly chroma: ChromaClient;
-  private readonly llm: OpenAI;
+  private readonly chroma: CloudClient;
+  private readonly anthropic: Anthropic;
 
   constructor() {
-    this.chroma = new ChromaClient(
-      { path: process.env.CHROMA_DB_PATH || './db/chroma' }
-    );
-    this.llm = new OpenAI({ openAIApiKey: process.env.OPENAI_API_KEY || '' });
+    this.chroma = new CloudClient({
+      apiKey: process.env.CHROMA_API_KEY || '',
+      tenant: process.env.CHROMA_TENANT || '',
+      database: process.env.CHROMA_DATABASE || 'search_file',
+    });
+    this.anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY || '' });
   }
 
   getStatus() {
     return {
-      app: 'NestJS + LangChain + ChromaDB',
-      chromaPath: process.env.CHROMA_DB_PATH || './db/chroma',
-      openAIApiKeyLoaded: !!process.env.OPENAI_API_KEY,
+      app: 'NestJS + Anthropic + ChromaDB',
+      anthropicApiKeyLoaded: !!process.env.ANTHROPIC_API_KEY,
     };
   }
 
   async query(prompt: string) {
-    const response = await this.llm.call(prompt);
-    return {
-      prompt,
-      response,
-    };
+    try {
+      const response = await this.anthropic.messages.create({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [
+          { role: 'user', content: prompt }
+        ]
+      });
+      return {
+        prompt,
+        response: response?.content || response,
+      };
+    } catch (err) {
+      return { error: String(err) };
+    }
   }
 }
